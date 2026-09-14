@@ -1,0 +1,45 @@
+name: Daily arXiv Digest
+
+# 每天自动生成一份中文 arXiv 论文日报并提交回仓库。
+# 提交作者邮箱 = 你 GitHub 账号已验证邮箱，这样绿格子才算你的贡献。
+on:
+  schedule:
+    # 北京时间每天 06:17（UTC 22:17）。刻意避开整点，减少被 GitHub 调度高峰延迟的概率。
+    - cron: '17 22 * * *'
+  workflow_dispatch:      # 手动点一下就能立刻跑一遍，方便测试
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-digest
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 生成日报（仅标准库，无需装依赖）
+        run: python scripts/daily_digest.py
+
+      - name: 提交并推送
+        run: |
+          # 提交身份从仓库变量 GIT_NAME / GIT_EMAIL 读取（Settings → Secrets and variables → Actions → Variables）。
+          # 默认用的是 GitHub 官方匿名邮箱 <你的数字ID>+<用户名>@users.noreply.github.com：
+          # 它天然绑定到你的账号，贡献照样算你的，但不会把真实邮箱写进公开提交历史。
+          git config user.name  "${{ vars.GIT_NAME  || 'birdger' }}"
+          git config user.email "${{ vars.GIT_EMAIL || '116474921+birdger@users.noreply.github.com' }}"
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo "本次没有变化，跳过提交"
+            exit 0
+          fi
+          git commit -m "digest: $(TZ=Asia/Shanghai date +%F) arXiv 日报"
+          git push

@@ -1,0 +1,31 @@
+{
+  "_comment": "每日 arXiv 论文雷达配置。改这里就等于改日报口味，改完 push 当天生效。",
+  "categories": ["cs.IR", "cs.CL", "cs.CV", "cs.MM", "cs.LG"],
+  "announce_types": ["new", "cross"],
+  "window_days": 3,
+  "max_items": 40,
+  "min_score": 3,
+  "high_score": 6,
+  "keywords": {
+    "multimodal recommendation": 8,
+    "multimodal recommender": 8,
+    "cross-modal recommendation": 8,
+    "multimodal fusion": 5,
+    "cross-modal alignment": 5,
+    "modality gap": 5,
+    "LLM-enhanced recommendation": 7,
+    "LLM4Rec": 6,
+    "large language model*recommend": 5,
+    "generative recommendation": 5,
+    "semantic id": 5,
+    "item tokenization": 5,
+    "sequential recommendation": 4,
+    "retrieval-augmented": 3,
+    "user modeling": 3,
+    "collaborative filtering": 2,
+    "contrastive learning": 2,
+    "knowledge graph": 2,
+    "recommender": 2,
+    "recommendation": 1
+  }
+}
